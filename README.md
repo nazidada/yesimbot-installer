@@ -133,3 +133,12 @@ node install-yesimbot.mjs --yes --api-key sk-xxxx --base-url https://api.example
 ## 许可证
 
 MIT
+
+## 贡献者
+
+感谢以下贡献者：
+
+- [Nazidada](https://github.com/nazidada) — 项目发起与维护
+- [Claude](https://github.com/anthropics/claude-code) — 脚本开发、测试与文档编写
+
+欢迎提交 Issue 与 PR！
