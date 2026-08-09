@@ -2,9 +2,8 @@
 // build-packages.mjs — 制作三系统安装包（每个包含完整文件）
 // 用法: node build-packages.mjs [--version <版本>] [--out <输出目录>]
 // 产物:
-//   yesimbot-installer-<ver>-macos.tar.gz   （install-yesimbot.mjs / .sh / .bat / README.md）
-//   yesimbot-installer-<ver>-linux.tar.gz   （同上）
-//   yesimbot-installer-<ver>-windows.zip    （同上）
+//   yesimbot-installer-<ver>-{macos,linux,windows}.tar.gz（每个包含完整文件）
+//   yesimbot-installer-<ver>-{macos,linux,windows}.zip   （同上）
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -48,17 +47,14 @@ function prepareStaging(target) {
 
 const base = `yesimbot-installer-${version}`;
 
-const macDir = prepareStaging("macos");
-run("tar", ["-czf", path.join(outDir, `${base}-macos.tar.gz`), "-C", macDir, "."]);
-console.log(`  ${base}-macos.tar.gz`);
-
-const linuxDir = prepareStaging("linux");
-run("tar", ["-czf", path.join(outDir, `${base}-linux.tar.gz`), "-C", linuxDir, "."]);
-console.log(`  ${base}-linux.tar.gz`);
-
-const winDir = prepareStaging("windows");
-run("zip", ["-r", "-q", path.join(outDir, `${base}-windows.zip`), "."], { cwd: winDir });
-console.log(`  ${base}-windows.zip`);
+// 每个平台都打 .tar.gz 与 .zip 两种格式（macOS/Linux 额外补 zip，Windows 额外补 tar.gz）
+for (const target of ["macos", "linux", "windows"]) {
+  const dir = prepareStaging(target);
+  run("tar", ["-czf", path.join(outDir, `${base}-${target}.tar.gz`), "-C", dir, "."]);
+  console.log(`  ${base}-${target}.tar.gz`);
+  run("zip", ["-r", "-q", path.join(outDir, `${base}-${target}.zip`), "."], { cwd: dir });
+  console.log(`  ${base}-${target}.zip`);
+}
 
 fs.rmSync(staging, { recursive: true, force: true });
 console.log(`打包完成，输出目录: ${outDir}`);
