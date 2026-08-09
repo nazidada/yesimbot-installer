@@ -10,22 +10,32 @@
 
 | 方式 | 适用系统 | 命令 |
 | ---- | -------- | ---- |
-| **一键管道**（推荐） | macOS / Linux | `curl -fsSL <URL>.mjs \| node` |
+| **管道直接运行** | macOS / Linux / Windows | `curl -fsSL <URL>.mjs \| node` |
 | **shell 脚本** | macOS / Linux | 下载 `install-yesimbot.sh` 后运行 |
-| **批处理脚本** | Windows | 下载 `install-yesimbot.bat` 后双击/运行 |
+| **安装包** | macOS / Linux | Release 页面下载 `.tar.gz` / `.zip` |
 
-### 方式一：管道直接运行（需 Node.js）
+### 方式一：管道直接运行（需 Node.js ≥ 18）
 
 ```bash
 # macOS / Linux
 curl -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.mjs | node
+```
 
-# Windows（PowerShell，Win10+ 自带 curl.exe）
+### 方式二：PowerShell 安装（Windows）
+
+Windows 用户请**先安装 Git 与 Node.js**，再用 PowerShell 运行（Win10+ 自带 `curl.exe`）：
+
+```powershell
+# 1. 安装依赖（首次）
+winget install Git.Git
+winget install OpenJS.NodeJS.LTS
+
+# 2. 下载并运行安装脚本
 curl.exe -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.mjs -o install-yesimbot.mjs
 node install-yesimbot.mjs
 ```
 
-### 方式二：shell 脚本（macOS / Linux）
+### 方式三：shell 脚本（macOS / Linux）
 
 无需先安装 Node.js——脚本自带引导，检测到 Node.js 后自动运行安装逻辑（未安装时会给出安装指引）：
 
@@ -35,16 +45,7 @@ chmod +x install-yesimbot.sh
 ./install-yesimbot.sh
 ```
 
-### 方式三：批处理脚本（Windows）
-
-无需先安装 Node.js——脚本自带引导，检测到 Node.js 后自动运行安装逻辑：
-
-```powershell
-curl.exe -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.bat -o install-yesimbot.bat
-install-yesimbot.bat
-```
-
-> 所有脚本均可通过 `--help` 查看参数；`install-yesimbot.sh` / `.bat` 由 `install-yesimbot.mjs` 生成，保持同一份安装逻辑。
+> 所有脚本均可通过 `--help` 查看参数；`install-yesimbot.sh` 由 `install-yesimbot.mjs` 生成，保持同一份安装逻辑。Windows 暂不提供打包文件，请使用方式二。
 
 ## 安装流程
 

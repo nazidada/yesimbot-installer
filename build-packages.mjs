@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// build-packages.mjs — 制作三系统安装包（每个包含完整文件）
+// build-packages.mjs — 制作 macOS / Linux 安装包（每个包含完整文件）
 // 用法: node build-packages.mjs [--version <版本>] [--out <输出目录>]
-// 产物:
-//   yesimbot-installer-<ver>-{macos,linux,windows}.tar.gz（每个包含完整文件）
-//   yesimbot-installer-<ver>-{macos,linux,windows}.zip   （同上）
+// 产物（Windows 不打包，见 README 的 PowerShell 安装方式）:
+//   yesimbot-installer-<ver>-{macos,linux}.tar.gz
+//   yesimbot-installer-<ver>-{macos,linux}.zip
 
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -20,7 +20,7 @@ for (let i = 0; i < args.length; i += 1) {
   else if (args[i] === "--repo") sourceDir = path.resolve(args[i + 1]);
 }
 
-const FILES = ["install-yesimbot.mjs", "install-yesimbot.sh", "install-yesimbot.bat", "README.md"];
+const FILES = ["install-yesimbot.mjs", "install-yesimbot.sh", "README.md"];
 for (const file of FILES) {
   if (!fs.existsSync(path.join(sourceDir, file))) throw new Error(`缺少 ${file}，请先运行 build-installers.mjs`);
 }
@@ -47,8 +47,8 @@ function prepareStaging(target) {
 
 const base = `yesimbot-installer-${version}`;
 
-// 每个平台都打 .tar.gz 与 .zip 两种格式（macOS/Linux 额外补 zip，Windows 额外补 tar.gz）
-for (const target of ["macos", "linux", "windows"]) {
+// macOS / Linux 各打 .tar.gz 与 .zip 两种格式
+for (const target of ["macos", "linux"]) {
   const dir = prepareStaging(target);
   run("tar", ["-czf", path.join(outDir, `${base}-${target}.tar.gz`), "-C", dir, "."]);
   console.log(`  ${base}-${target}.tar.gz`);
