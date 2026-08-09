@@ -1,0 +1,50 @@
+@echo off
+REM install-yesimbot.bat 引导头 — 被 build-installers.mjs 拼接
+REM 检查 node，base64 解码内嵌 mjs，node 运行。
+setlocal enabledelayedexpansion
+
+REM ---------- 1. 检查 node ----------
+where node >nul 2>nul
+if errorlevel 1 (
+  echo [install] 未检测到 Node.js。请先安装 Node.js 18+ 后重新运行本脚本：
+  echo   访问 https://nodejs.org 下载安装包
+  echo   或使用 nvm-windows: https://github.com/coreybutler/nvm-windows/releases
+  echo.
+  pause
+  exit /b 1
+)
+
+REM ---------- 2. 提取内嵌的 install-yesimbot.mjs（base64 解码） ----------
+set "WORK_DIR=%TEMP%\yesimbot-install-%RANDOM%"
+mkdir "%WORK_DIR%" >nul 2>nul
+set "B64_FILE=%WORK_DIR%\install.b64"
+set "MJS_FILE=%WORK_DIR%\install-yesimbot.mjs"
+
+REM 提取 base64 内容：从 "REM __MJS_BASE64_BEGIN__" 下一行到 "REM __MJS_BASE64_END__" 上一行
+set "IN_MARKER=0"
+> "%B64_FILE%" (
+  for /f "usebackq delims=" %%L in ("%~f0") do (
+    if "%%L"=="REM __MJS_BASE64_BEGIN__" set "IN_MARKER=1"
+    if "!IN_MARKER!"=="1" (
+      if not "%%L"=="REM __MJS_BASE64_BEGIN__" (
+        if not "%%L"=="REM __MJS_BASE64_END__" echo %%L
+      )
+    )
+  )
+)
+
+certutil -decode "%B64_FILE%" "%MJS_FILE%" >nul 2>nul
+if errorlevel 1 (
+  echo [install] base64 解码失败，文件可能已损坏。
+  pause
+  exit /b 1
+)
+
+REM ---------- 3. 运行安装逻辑 ----------
+node "%MJS_FILE%" %*
+set "EXIT_CODE=%ERRORLEVEL%"
+del /q "%B64_FILE%" "%MJS_FILE%" >nul 2>nul
+rmdir "%WORK_DIR%" >nul 2>nul
+exit /b %EXIT_CODE%
+
+REM __MJS_BASE64_BEGIN__

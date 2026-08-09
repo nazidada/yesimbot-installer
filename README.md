@@ -6,31 +6,45 @@
 
 ## 快速开始
 
-### 一键安装（推荐）
+提供三种安装方式，任选其一。三种方式内容相同，区别仅在启动入口：
 
-在终端执行以下任一命令（安装过程中会交互式询问配置）：
+| 方式 | 适用系统 | 命令 |
+| ---- | -------- | ---- |
+| **一键管道**（推荐） | macOS / Linux | `curl -fsSL <URL>.mjs \| node` |
+| **shell 脚本** | macOS / Linux | 下载 `install-yesimbot.sh` 后运行 |
+| **批处理脚本** | Windows | 下载 `install-yesimbot.bat` 后双击/运行 |
+
+### 方式一：管道直接运行（需 Node.js）
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/TiccaTika/yesimbot-installer/main/install-yesimbot.mjs | node
+curl -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.mjs | node
 
 # Windows（PowerShell，Win10+ 自带 curl.exe）
-curl.exe -fsSL https://raw.githubusercontent.com/TiccaTika/yesimbot-installer/main/install-yesimbot.mjs -o install-yesimbot.mjs
+curl.exe -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.mjs -o install-yesimbot.mjs
 node install-yesimbot.mjs
 ```
 
-### 手动安装
+### 方式二：shell 脚本（macOS / Linux）
+
+无需先安装 Node.js——脚本自带引导，检测到 Node.js 后自动运行安装逻辑（未安装时会给出安装指引）：
 
 ```bash
-# 下载脚本
-curl -fsSL https://raw.githubusercontent.com/TiccaTika/yesimbot-installer/main/install-yesimbot.mjs -o install-yesimbot.mjs
-
-# 运行（交互式）
-node install-yesimbot.mjs
-
-# 或非交互式（自动使用默认值）
-node install-yesimbot.mjs --yes --api-key sk-xxxx --dir ./my-bot
+curl -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.sh -o install-yesimbot.sh
+chmod +x install-yesimbot.sh
+./install-yesimbot.sh
 ```
+
+### 方式三：批处理脚本（Windows）
+
+无需先安装 Node.js——脚本自带引导，检测到 Node.js 后自动运行安装逻辑：
+
+```powershell
+curl.exe -fsSL https://raw.githubusercontent.com/nazidada/yesimbot-installer/main/install-yesimbot.bat -o install-yesimbot.bat
+install-yesimbot.bat
+```
+
+> 所有脚本均可通过 `--help` 查看参数；`install-yesimbot.sh` / `.bat` 由 `install-yesimbot.mjs` 生成，保持同一份安装逻辑。
 
 ## 安装流程
 
